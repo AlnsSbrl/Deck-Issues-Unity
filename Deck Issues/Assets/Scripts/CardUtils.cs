@@ -9,15 +9,22 @@ public enum Deck
 }
 public class CardUtils
 {
+    [Obsolete]
     public static string GetSpriteForSpanishDeckCard(SpanishDeck Card)
     {
-        var field_sp = typeof(SpanishDeck).GetField(Card.ToString());
-        var attribute_sp = (EnumValueAttribute)Attribute.GetCustomAttribute(field_sp, typeof(EnumValueAttribute));
-        return attribute_sp?.Value?? string.Empty;
+       throw new NotImplementedException();
     }
 
+    [Obsolete]
     public static string GetSpriteForFrenchDeckCard(FrenchDeck Card)
     {
         throw new NotImplementedException();
+    }
+
+    public static int GetTuteValueForSpanishDeckCard(SpanishDeck Card)
+    {
+        var field = typeof(SpanishDeck).GetField(Card.ToString());
+        var attribute_sp = (EnumValueAttribute)Attribute.GetCustomAttribute (field, typeof(EnumValueAttribute));
+        return attribute_sp?.TuteValue ?? 0;
     }
 }

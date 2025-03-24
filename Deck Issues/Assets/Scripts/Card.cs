@@ -1,19 +1,23 @@
+using Assets.Scripts;
+using System;
 using UnityEngine;
 
-public class Card : MonoBehaviour
+public class Card
 {
+    public int CardValue;
 
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Card(SpanishDeck cardValue)
     {
-        
+        CardValue = (int)cardValue;
+    }
+    public Card(FrenchDeck cardValue)
+    {
+        CardValue = (int)cardValue;
     }
 
-    // Update is called once per frame
-    void Update()
+    public string GetCardSpritePath()
     {
-        
+        throw new NotImplementedException();
     }
+    
 }
