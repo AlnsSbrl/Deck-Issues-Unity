@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ESPADAS_CUATRO_0: -8780011138124098895
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      OROS_CINCO_0: 6189441397341968872
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ESPADAS_CABALLO_0: 2088803878303024943
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

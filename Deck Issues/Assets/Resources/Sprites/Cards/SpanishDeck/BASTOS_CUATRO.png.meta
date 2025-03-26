@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BASTOS_CUATRO_0: -6488468703881513575
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

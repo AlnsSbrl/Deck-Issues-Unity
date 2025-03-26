@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      COPAS_CABALLO_0: 3663975197083504137
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

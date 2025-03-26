@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ESPADAS_CINCO_0: -8773095108439729732
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

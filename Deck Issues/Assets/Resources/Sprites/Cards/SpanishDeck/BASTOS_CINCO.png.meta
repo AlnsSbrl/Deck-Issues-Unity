@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BASTOS_CINCO_0: -7714937815914927499
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

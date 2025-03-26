@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      OROS_CABALLO_0: 7747926634397330947
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
