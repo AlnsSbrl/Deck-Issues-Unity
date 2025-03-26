@@ -44,10 +44,17 @@ public class SpanishDeckCard : MonoBehaviour
         int suit = num / 10;
         Debug.Log(suit);
         this.SpanishSuit = (SpanishSuit)Enum.GetValues(typeof(SpanishSuit)).GetValue(suit);
-
-
     }
 
+    private void MoveCardToCenterOfTheScreenAfterBeeingUsed()
+    {
+        //TODO
+        //this happens after an OnClick action on the card
+        //but doesnt happen when the card is not from a player OR the move is not allowed
+        //it flips and throws the card into the closest point of an inner circle on the center of the screen
+        //TODO: DEFINE SAID CIRCLE, invisible, surrounding the space where the card to deal cards (and triumphs) are displayed
+
+    }
 
     private void GetCardValueByGame()
     {
