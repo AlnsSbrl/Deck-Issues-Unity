@@ -12,7 +12,9 @@ public class CurreloGameController : MonoBehaviour
 {
     public HashSet<SpanishDeck> PossibleCards;
     public HashSet<SpanishDeck> DealtCards;
-    public List<Player> Players;
+
+    [SerializeField]
+    public List<Player> Players; //TODO-> tienen una lista de cartas, una booleana para saber si han ganado
     public bool hasGameStarted;
     public int playerThatDealtTheCards;
     public int nextPlayerToPlay;
@@ -22,6 +24,8 @@ public class CurreloGameController : MonoBehaviour
     public int NumberOfPlayers;
 
     public SpanishDeck Triumph;
+    public SpanishDeck firstCardPlayed;
+    public SpanishDeck currentHandWinningCard;
 
     void Start()
     {
@@ -45,6 +49,38 @@ public class CurreloGameController : MonoBehaviour
         else
         {
             //empieza una baza, con el jugador que deberia empezar segun el orden de repartir
+            int winningPlayerIndex = 0;
+            //todo cambiar la variable de contador de bucle
+            for (int i = 0; i < Players.Count; i++)
+            {
+                //check if its players turn
+                if (Players[i].IsPlayer)           
+                {
+                    Input. // y comprobar si se puede
+                }
+                else
+                {
+                    SpanishDeck cardPlaeyd = Players[i].PerformNextCardMove();
+                }
+                //what if no hay currentHandWinningCard
+                if(DoesNewCardBeatOldCard(currentHandWinningCard, cardPlaeyd)){
+                    currentHandWinningCard= cardPlaeyd;
+                    winningPlayerIndex= i;
+                }
+                if(/* contador es multiplo de numero de jugadores se acaba la baza*/)
+                {
+                    Players[winningPlayerIndex].HasWon = true;
+                    if (Players[winningPlayerIndex].AvailableCards.Count == 0)
+                    {
+                        //finalizar baza
+                        //clear hand winning and first card played
+                        //hacer desaparecer las cartas
+                        //volver a activar carta
+                        
+
+                    }
+                }                
+            }
             //condicion de si se puede jugar la carta o hay algun proceso esperando siendo ejecutado
             //teniendo en cuenta el turno del next player le tocará al jugador seleccionar un input o la maquina toma la decision
             //se echa la carta y se da un waittime mientras se ejecutan el resto de procesos
@@ -53,6 +89,34 @@ public class CurreloGameController : MonoBehaviour
             //se repite este bucle mientras los jugadores tengan cartas, empezando el jugador que ganó la baza
             //cuando se acaben todas las bazas, se determina el ganador, se hace otra animacion y se vuelve a la escena original
         }
+    }
+
+    private bool DoesNewCardBeatOldCard(SpanishDeck currentHandWinningCard=null, SpanishDeck newPlayedCard)
+    {
+        if (currentHandWinningCard == null) 
+        { 
+            currentHandWinningCard = newPlayedCard;
+            firstCardPlayed = newPlayedCard;
+            return true;
+        }
+        if (GetSuit(currentHandWinningCard) == GetSuit(newPlayedCard))
+        {
+            return GetCardValue(newPlayedCard)> GetCardValue(currentHandWinningCard);
+        }
+        else
+        {
+            return GetSuit(newPlayedCard)==GetSuit(Triumph);
+        }
+    }
+
+    private SpanishSuit GetSuit(SpanishDeck card)
+    {
+        return EnumExtensions.GetSpanishSuit(card);
+    }
+
+    private int GetCardValue(SpanishDeck card)
+    {
+        return EnumExtensions.GetCardValue(card);
     }
 
     private void InitPlayerCardDistribution(int numberOfPlayers)
@@ -65,7 +129,8 @@ public class CurreloGameController : MonoBehaviour
     {
         InitCards();
         DealCardsGiven_NumberOfPlayersAndNumberOfCardsPerPlayer(numberOfPlayers, 3);  
-        return true;    }
+        return true;    
+    }
 
     private void DealCardsGiven_NumberOfPlayersAndNumberOfCardsPerPlayer(int numberOfPlayers, int NumberOfCardsPerPlayer)
     {
@@ -86,69 +151,8 @@ public class CurreloGameController : MonoBehaviour
             }
     }
 
-    public bool isMoveLegal(SpanishDeck selectedCard, SpanishDeck[] availableCards, SpanishDeck currentHandWinningCard, SpanishDeck firstPlayedCard)
-    {
-        //from available cards, le aplicamos un "filtro": solo quedan las que asisten al palo
-        
-        List<SpanishDeck> CardsThatFollowTheRule = availableCards.Where(x=>GetSuit(x)==GetSuit(firstPlayedCard)).ToList();
+    
 
-        if(CardsThatFollowTheRule.Count > 0)
-        {
-            if (GetSuit(firstPlayedCard) == GetSuit(currentHandWinningCard))
-            {
-                List<SpanishDeck> CardsThatHaveAHigherValue = CardsThatFollowTheRule.Where(x=>GetCardValue(x)>GetCardValue(currentHandWinningCard)).ToList();
-                if(CardsThatHaveAHigherValue.Count > 0)
-                {
-                    //le tienes que subir a la carta más alta
-                    return CardsThatHaveAHigherValue.Contains(selectedCard);
-                }
-                else
-                {
-                    //no puedes subirle a la carta más alta
-                    return CardsThatFollowTheRule.Contains(selectedCard);
-                }
-            }
-            else
-            {
-                //alguien ha fallado pero sigues teniendo que asistir
-                return CardsThatFollowTheRule.Contains(selectedCard);
-            }
-        }
-
-        List<SpanishDeck> CardsThatAreTriumph = availableCards.Where(x=>GetSuit(x)==GetSuit(Triumph)).ToList();
-        
-        if(CardsThatAreTriumph.Count > 0)
-        {
-            if (GetSuit(currentHandWinningCard) == GetSuit(Triumph))
-            {
-                List<SpanishDeck> CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard = CardsThatAreTriumph.Where(x => GetCardValue(x) > GetCardValue(currentHandWinningCard)).ToList();
-                if(CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard.Count > 0)
-                {
-                    //solo puedes echar un triunfo mayor al que está ganando ahora mismo
-                    return CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard.Contains(selectedCard);
-                }
-                else
-                {
-                    //si no tienes un triunfo mayor que el que está ganando, no tienes por qué echar triunfo
-                    return availableCards.Contains(selectedCard);
-                }
-            }
-            //te permite echar cualquier triunfo
-            return CardsThatAreTriumph.Contains(selectedCard);    
-        }
-        //at this point it doesn't restrict which card you play
-        return availableCards.Contains(selectedCard);
-    }
-
-    private SpanishSuit GetSuit(SpanishDeck card)
-    {
-        return EnumExtensions.GetSpanishSuit(card);
-    }
-
-    private int GetCardValue(SpanishDeck card)
-    {
-        return EnumExtensions.GetCardValue(card);
-    }
 
     public void InitCards()
     {
