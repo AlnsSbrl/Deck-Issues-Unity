@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using Assets.Scripts.Enums;
 using System;
 using UnityEngine;
 
@@ -12,8 +13,8 @@ public class SpanishDeckCard : MonoBehaviour
     [SerializeField]
     public int CardsBackIndexUsed;
 
-    public int value;
-    public SpanishSuit SpanishSuit;
+    public bool IsFromPlayer;
+    public SpanishDeck SpanishDeck;
     private SpriteRenderer _SpriteRenderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,7 +30,7 @@ public class SpanishDeckCard : MonoBehaviour
         {
             int nextCard = UnityEngine.Random.Range(0, Deck.Length);
             ChangeCard(nextCard);
-            Debug.Log($"Next card value: {this.value} with suit: {this.SpanishSuit}");
+            Debug.Log($"Next card value: {EnumExtensions.GetCardValue(SpanishDeck)} with suit: {EnumExtensions.GetSpanishSuit(SpanishDeck)}");
         }
     }
 
@@ -39,11 +40,8 @@ public class SpanishDeckCard : MonoBehaviour
         {
             return;
         }
-        this.value = num;
-        _SpriteRenderer.sprite = Deck[num];
-        int suit = num / 10;
-        Debug.Log(suit);
-        this.SpanishSuit = (SpanishSuit)Enum.GetValues(typeof(SpanishSuit)).GetValue(suit);
+        SpanishDeck = (SpanishDeck)num;
+        _SpriteRenderer.sprite = Deck[num];       
     }
 
     private void MoveCardToCenterOfTheScreenAfterBeeingUsed()

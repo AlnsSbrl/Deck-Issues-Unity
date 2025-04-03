@@ -1,5 +1,8 @@
+using Assets.Scripts;
+using Assets.Scripts.Enums;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CurreloPlayer : MonoBehaviour
@@ -23,23 +26,16 @@ public class CurreloPlayer : MonoBehaviour
         
     }
 
-    public SpanishDeck PerformNextCardMove(SpanishDeck firstCardPlayed, SpanishDeck currentHandWinningCard, SpanishDeck triumph)
+    public SpanishDeck PerformNextCardMove(SpanishDeck firstCardPlayed, SpanishDeck triumph, SpanishDeck? currentHandWinningCard=null)
     {
-        CalculateLegalMoves(firstCardPlayed, currentHandWinningCard, triumph);
-        if (!isPlayer)
-        {
-            int randomCard = Random.Range(0, HandCardsAllowedToPlayNextMove.Count);//se podria mejorar la toma de decision but whatever
-            SpanishDeck selectedCard = HandCardsAllowedToPlayNextMove[selectedCard];
-            HandCards.Remove(selectedCard);
-            return selectedCard;
-        }
-        else
-        {
-            //coger la carta en base al input del player, determinando si es legal o no el movimiento
-        }
+        CalculateLegalMoves(firstCardPlayed, triumph, currentHandWinningCard);
+        int randomCard = Random.Range(0, HandCardsAllowedToPlayNextMove.Count);//se podria mejorar la toma de decision but whatever
+        SpanishDeck selectedCard = HandCardsAllowedToPlayNextMove[randomCard];
+        HandCards.Remove(selectedCard);
+        return selectedCard;      
     }
 
-            public void CalculateLegalMoves(SpanishDeck? currentHandWinningCard = null, SpanishDeck firstPlayedCard, SpanishDeck Triumph)
+            public void CalculateLegalMoves(SpanishDeck firstPlayedCard, SpanishDeck Triumph, SpanishDeck? currentHandWinningCard = null)
             {
                 //from available cards, le aplicamos un "filtro": solo quedan las que asisten al palo
                 if (currentHandWinningCard == null)
@@ -52,9 +48,9 @@ public class CurreloPlayer : MonoBehaviour
 
                 if (CardsThatFollowTheRule.Count > 0)
                 {
-                    if (GetSuit(firstPlayedCard) == GetSuit(currentHandWinningCard))
+                    if (GetSuit(firstPlayedCard) == GetSuit((SpanishDeck)currentHandWinningCard))
                     {
-                        List<SpanishDeck> CardsThatHaveAHigherValue = CardsThatFollowTheRule.Where(x => GetCardValue(x) > GetCardValue(currentHandWinningCard)).ToList();
+                        List<SpanishDeck> CardsThatHaveAHigherValue = CardsThatFollowTheRule.Where(x => GetCardValue(x) > GetCardValue((SpanishDeck)currentHandWinningCard)).ToList();
                         if (CardsThatHaveAHigherValue.Count > 0)
                         {
                             //le tienes que subir a la carta más alta
@@ -76,13 +72,13 @@ public class CurreloPlayer : MonoBehaviour
                     }
                 }
 
-                List<SpanishDeck> CardsThatAreTriumph = availableCards.Where(x => GetSuit(x) == GetSuit(Triumph)).ToList();
+                List<SpanishDeck> CardsThatAreTriumph = HandCards.Where(x => GetSuit(x) == GetSuit(Triumph)).ToList();
 
                 if (CardsThatAreTriumph.Count > 0)
                 {
-                    if (GetSuit(currentHandWinningCard) == GetSuit(Triumph))
+                    if (GetSuit((SpanishDeck)currentHandWinningCard) == GetSuit(Triumph))
                     {
-                        List<SpanishDeck> CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard = CardsThatAreTriumph.Where(x => GetCardValue(x) > GetCardValue(currentHandWinningCard)).ToList();
+                        List<SpanishDeck> CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard = CardsThatAreTriumph.Where(x => GetCardValue(x) > GetCardValue((SpanishDeck)currentHandWinningCard)).ToList();
                         if (CardsThatAreTriumphAndAreBetterThanTheCurrentlyWinningCard.Count > 0)
                         {
                             //solo puedes echar un triunfo mayor al que está ganando ahora mismo

@@ -14,7 +14,7 @@ public class CurreloGameController : MonoBehaviour
     public HashSet<SpanishDeck> DealtCards;
 
     [SerializeField]
-    public List<Player> Players; //TODO-> tienen una lista de cartas, una booleana para saber si han ganado
+    public List<CurreloPlayer> Players; //TODO-> tienen una lista de cartas, una booleana para saber si han ganado
     public bool hasGameStarted;
     public int playerThatDealtTheCards;
     public int nextPlayerToPlay;
@@ -24,8 +24,8 @@ public class CurreloGameController : MonoBehaviour
     public int NumberOfPlayers;
 
     public SpanishDeck Triumph;
-    public SpanishDeck firstCardPlayed;
-    public SpanishDeck currentHandWinningCard;
+    public SpanishDeck FirstCardPlayed;
+    public SpanishDeck? CurrentHandWinningCard;
 
     void Start()
     {
@@ -53,24 +53,59 @@ public class CurreloGameController : MonoBehaviour
             //todo cambiar la variable de contador de bucle
             for (int i = 0; i < Players.Count; i++)
             {
+                SpanishDeck CardPlayed;
                 //check if its players turn
-                if (Players[i].IsPlayer)           
+                if (Players[i].isPlayer)           
                 {
-                    Input. // y comprobar si se puede
+                    while (true)
+                    {
+                        if (Input.GetMouseButtonDown(0)) 
+                        {
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
+                            if(hit.collider != null)
+                            {
+                                Debug.Log(hit.collider.gameObject.name);
+                                CardPlayed = (SpanishDeck)int.Parse(hit.collider.gameObject.tag);
+                                bool isValidMove=false;
+                                // y comprobar si se puede
+                                if (isValidMove)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    //perform wrong move sfx, maybe animation or color change
+                                }
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
                 }
                 else
                 {
-                    SpanishDeck cardPlaeyd = Players[i].PerformNextCardMove();
+                    if (CurrentHandWinningCard != null)
+                    {
+                        CardPlayed = Players[i].PerformNextCardMove(FirstCardPlayed,Triumph, CurrentHandWinningCard);
+                    }
+                    else
+                    {
+                        CardPlayed = Players[i].PerformNextCardMove(FirstCardPlayed,Triumph);
+                    }
                 }
                 //what if no hay currentHandWinningCard
-                if(DoesNewCardBeatOldCard(currentHandWinningCard, cardPlaeyd)){
-                    currentHandWinningCard= cardPlaeyd;
+                if(DoesNewCardBeatOldCard(CardPlayed, CurrentHandWinningCard))
+                {
+                    CurrentHandWinningCard= CardPlayed;
                     winningPlayerIndex= i;
                 }
                 if(/* contador es multiplo de numero de jugadores se acaba la baza*/)
                 {
-                    Players[winningPlayerIndex].HasWon = true;
-                    if (Players[winningPlayerIndex].AvailableCards.Count == 0)
+                    Players[winningPlayerIndex].hasWon = true;
+                    if (Players[winningPlayerIndex].HandCards.Count == 0)
                     {
                         //finalizar baza
                         //clear hand winning and first card played
@@ -91,17 +126,18 @@ public class CurreloGameController : MonoBehaviour
         }
     }
 
-    private bool DoesNewCardBeatOldCard(SpanishDeck currentHandWinningCard=null, SpanishDeck newPlayedCard)
+    private bool DoesNewCardBeatOldCard(SpanishDeck newPlayedCard, SpanishDeck? currentHandWinningCard = null)
     {
         if (currentHandWinningCard == null) 
         { 
             currentHandWinningCard = newPlayedCard;
-            firstCardPlayed = newPlayedCard;
+            FirstCardPlayed = newPlayedCard;
             return true;
         }
-        if (GetSuit(currentHandWinningCard) == GetSuit(newPlayedCard))
+        
+        if (GetSuit((SpanishDeck)currentHandWinningCard) == GetSuit(newPlayedCard))
         {
-            return GetCardValue(newPlayedCard)> GetCardValue(currentHandWinningCard);
+            return GetCardValue(newPlayedCard)> GetCardValue((SpanishDeck)currentHandWinningCard);
         }
         else
         {
@@ -135,7 +171,7 @@ public class CurreloGameController : MonoBehaviour
     private void DealCardsGiven_NumberOfPlayersAndNumberOfCardsPerPlayer(int numberOfPlayers, int NumberOfCardsPerPlayer)
     {
         
-            Players = new List<Player>(); //config this on onStart()
+            Players = new List<CurreloPlayer>(); //config this on onStart()
             DealtCards = new HashSet<SpanishDeck>();
             List<SpanishDeck> AuxCards = PossibleCards.ToList();          
             for (int i = 0;i < numberOfPlayers; i++)

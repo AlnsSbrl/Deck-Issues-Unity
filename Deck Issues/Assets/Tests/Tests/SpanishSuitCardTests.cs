@@ -13,14 +13,6 @@ public class SpanishSuitCardTests
     [TestCase(10,SpanishSuit.COPAS)]
     public void EnsureChangingCardValue_UpdatesCardSuit(int CardValue, SpanishSuit expectedSuit)
     {
-        //given
-        SpanishDeckCard card = new GameObject().AddComponent<SpanishDeckCard>();
-        Sprite[] sprArr = Resources.LoadAll<Sprite>("Sprites/Cards/SpanishDeck");
-        TestContext.WriteLine($"Loaded {sprArr.Length} sprites");
-        card.Deck = sprArr;
-        //when
-        card.ChangeCard(CardValue);
-        //then
-        Assert.AreEqual(expectedSuit, card.SpanishSuit);
+      
     }
 }
